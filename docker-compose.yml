@@ -1,0 +1,22 @@
+services:
+  database:
+    image: postgres:latest
+    restart: unless-stopped
+    hostname: database
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=golang-extract
+    ports:
+      - "5432:5432"
+
+  extract-api: 
+    hostname: extract-api
+    build:
+      dockerfile: ./docker/Dockerfile
+      context: .
+    depends_on:
+      database:
+        condition: service_started
+    ports:
+      - 9999:9999
